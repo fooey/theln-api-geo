@@ -14,9 +14,11 @@
     "errorhandler": "~1.1.1",
     "express": "^4.6.1",
     "lodash": "*",
+    "logentries": "^1.0.2",
     "lru-cache": "^2.5.0",
     "morgan": "~1.1.1",
     "newrelic": "^1.8.0",
+    "nodetime": "^0.8.15",
     "request": "~2.37.0",
     "sqlite3": "~2.2.3"
   },
