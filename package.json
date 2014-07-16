@@ -8,7 +8,6 @@
   },
   "dependencies": {
     "async": "^0.8.0",
-    "case": "~1.0.3",
     "compression": "~1.0.8",
     "connect-slashes": "~1.2.0",
     "errorhandler": "~1.1.1",
@@ -19,7 +18,6 @@
     "morgan": "~1.1.1",
     "newrelic": "^1.8.0",
     "nodetime": "^0.8.15",
-    "request": "~2.37.0",
     "sqlite3": "~2.2.3"
   },
   "devDependencies": {
