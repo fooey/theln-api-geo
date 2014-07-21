@@ -77,6 +77,14 @@ module.exports = function(app, express) {
 	function jsonData(fnLookup, single, req, res) {
 		fnLookup(function(err, data) {
 			data = (single && data) ? data[0] : data;
+
+			const cacheTime = 60 * 15; // 15 minutes
+
+			res.set({
+				'Cache-Control': 'public, max-age=' + (cacheTime),
+				'Expires': new Date(Date.now() + (cacheTime * 1000)).toUTCString(),
+			});
+			
 			res.json(data);
 		});
 	}
