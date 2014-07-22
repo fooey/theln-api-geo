@@ -10,7 +10,7 @@ module.exports = function(app, express) {
 
 
 	app.get('/states', jsonData.bind(null, states.getStates, false));
-	app.get('/states/:stateSlug([a-z-]+?)', function(req, res) {
+	app.get('/states/:stateSlug([a-z,-]+?)', function(req, res) {
 		jsonData(
 			states.getState.bind(null, req.params.stateSlug),
 			true, req, res
@@ -46,7 +46,7 @@ module.exports = function(app, express) {
 			false, req, res
 		);
 	});
-	app.get('/cities/:stateSlug([a-z-]+?)/:citySlug([a-z-]+?)', function(req, res) {
+	app.get('/cities/:stateSlug([a-z-]+?)/:citySlug([a-z-,]+?)', function(req, res) {
 		jsonData(
 			cities.getCity.bind(null, req.params.stateSlug, req.params.citySlug),
 			true, req, res
@@ -60,7 +60,7 @@ module.exports = function(app, express) {
 			false, req, res
 		);
 	});
-	app.get('/zips/:zip([0-9]{5})', function(req, res) {
+	app.get('/zips/:zip([0-9,]{5,})', function(req, res) {
 		jsonData(
 			zips.getZip.bind(null, req.params.zip),
 			true, req, res
@@ -76,7 +76,7 @@ module.exports = function(app, express) {
 
 	function jsonData(fnLookup, single, req, res) {
 		fnLookup(function(err, data) {
-			data = (single && data) ? data[0] : data;
+			data = (single && data && data.length === 1) ? data[0] : data;
 
 			const cacheTime = 60 * 15; // 15 minutes
 

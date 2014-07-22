@@ -1,5 +1,7 @@
 'use strict';
 
+const _ = require('lodash');
+const async = require('async');
 
 const cache = require(GLOBAL.paths.getService('cache'));
 
@@ -20,9 +22,19 @@ function getZips(stateSlug, fnCallback) {
 
 
 function getZip(zip, fnCallback) {
-	var cacheKey = 'getZip():' + zip;
-	var statement = 'SELECT * FROM zips WHERE zip = ?';
-	var params = [zip];
+	if (zip.match(/,/)) {
+		var zips = _.unique(zip.split(','));
+		async.concat(
+			zips,
+			getZip,
+			fnCallback
+		);
+	}
+	else {
+		var cacheKey = 'getZip():' + zip;
+		var statement = 'SELECT * FROM zips WHERE zip = ?';
+		var params = [zip];
 
-	cache.get(cacheKey, statement, params, fnCallback);
+		cache.get(cacheKey, statement, params, fnCallback);
+	}
 }

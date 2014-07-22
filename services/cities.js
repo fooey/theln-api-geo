@@ -1,5 +1,7 @@
 'use strict';
 
+const _ = require('lodash');
+const async = require('async');
 
 const cache = require(GLOBAL.paths.getService('cache'));
 
@@ -20,9 +22,19 @@ function getCities(stateSlug, fnCallback) {
 
 
 function getCity(stateSlug, citySlug, fnCallback) {
-	var cacheKey = 'getCity():' + stateSlug + ':' + citySlug;
-	var statement = 'SELECT * FROM cities WHERE stateSlug = ? AND citySlug = ?';
-	var params = [stateSlug, citySlug];
+	if (citySlug.match(/,/)) {
+		var cities = _.unique(citySlug.split(','));
+		async.concat(
+			cities,
+			getCity.bind(null, stateSlug),
+			fnCallback
+		);
+	}
+	else {
+		var cacheKey = 'getCity():' + stateSlug + ':' + citySlug;
+		var statement = 'SELECT * FROM cities WHERE stateSlug = ? AND citySlug IN (?)';
+		var params = [stateSlug, citySlug];
 
-	cache.get(cacheKey, statement, params, fnCallback);
+		cache.get(cacheKey, statement, params, fnCallback);
+	}
 }
