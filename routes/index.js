@@ -85,7 +85,7 @@ module.exports = function(app, express) {
 				'Expires': new Date(Date.now() + (cacheTime * 1000)).toUTCString(),
 			});
 			
-			res.json(data);
+			res.jsonp(data);
 		});
 	}
 
