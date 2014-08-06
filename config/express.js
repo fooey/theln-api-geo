@@ -15,6 +15,7 @@ module.exports = function(app, express) {
 	const errorHandler = require('errorhandler');
 	const compression = require('compression');
 	const slashes = require('connect-slashes');
+	const cors = require('cors');
 
 	if (app.get('env') === 'development') {
 		app.use(errorHandler({ dumpExceptions: true, showStack: true }));
@@ -29,6 +30,7 @@ module.exports = function(app, express) {
 	}
 
 	// all environments
+	app.use(cors());
 	app.use(compression());
 	app.use(slashes(false)); // no trailing slashes
 
