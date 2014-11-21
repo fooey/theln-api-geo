@@ -8,23 +8,18 @@
   },
   "dependencies": {
     "async": "^0.8.0",
-    "compression": "^1.0.10",
-    "connect-slashes": "~1.2.0",
-    "cors": "^2.4.1",
-    "errorhandler": "~1.1.1",
-    "express": "^4.7.4",
     "lodash": "*",
     "logentries": "^1.0.2",
     "lru-cache": "^2.5.0",
-    "morgan": "^1.1.1",
-    "newrelic": "^1.9.1",
+    "newrelic": "^1.13.4",
     "nodetime": "^0.8.15",
-    "sqlite3": "~2.2.3"
+    "restify": "^2.8.3",
+    "sqlite3": "^2.2.7"
   },
   "devDependencies": {
-    "fast-csv": "^0.4.1",
+    "fast-csv": "^0.4.4",
     "grunt": "~0.4.5",
-    "grunt-concurrent": "~0.5.0",
+    "grunt-concurrent": "^0.5.0",
     "grunt-contrib-watch": "~0.6.1",
     "grunt-nodemon": "~0.3.0",
     "longjohn": "~0.2.4"

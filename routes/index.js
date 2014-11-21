@@ -6,69 +6,144 @@ const cities = require(GLOBAL.paths.getService('cities'));
 const zips = require(GLOBAL.paths.getService('zips'));
 
 
-module.exports = function(app, express) {
+module.exports = function(server, restify) {
 
 
-	app.get('/states', jsonData.bind(null, states.getStates, false));
-	app.get('/states/:stateSlug([a-z,-]+?)', function(req, res) {
+	/*
+	*	States
+	*/
+
+	server.get('/states',
+		jsonData.bind(null, states.getStates, false)
+	);
+
+
+
+	server.get(/^\/states\/([a-z-]+)$/, function(req, res) {
+		console.log('get state', req.params);
+
+		const stateSlug = req.params[0];
+
 		jsonData(
-			states.getState.bind(null, req.params.stateSlug),
+			states.getState.bind(null, stateSlug),
 			true, req, res
 		);
 	});
 
 
 
-	app.get('/counties/:stateSlug([a-z-]+?)', function(req, res) {
+
+
+	/*
+	*	counties
+	*/
+
+	server.get(/^\/counties\/([a-z,-]+)$/, function(req, res) {
+		console.log('get counties by state', req.params);
+
+		const stateSlug = req.params[0];
+
 		jsonData(
-			counties.getCounties.bind(null, req.params.stateSlug),
+			counties.getCounties.bind(null, stateSlug),
 			false, req, res
 		);
 	});
-	app.get('/counties/:stateSlug([a-z-]+?)/:countySlug([a-z-]+?)/cities', function(req, res) {
+
+
+
+	server.get(/^\/counties\/([a-z-]+)\/([a-z-]+)$/, function(req, res) {
+		console.log('get county', req.params);
+
+		const stateSlug = req.params[0];
+		const countySlug = req.params[1];
+
 		jsonData(
-			counties.getCities.bind(null, req.params.stateSlug, req.params.countySlug),
-			false, req, res
-		);
-	});
-	app.get('/counties/:stateSlug([a-z-]+?)/:countySlug([a-z-]+?)', function(req, res) {
-		jsonData(
-			counties.getCounty.bind(null, req.params.stateSlug, req.params.countySlug),
+			counties.getCounty.bind(null, stateSlug, countySlug),
 			true, req, res
 		);
 	});
 
 
 
-	app.get('/cities/:stateSlug([a-z-]+?)', function(req, res) {
+	server.get(/^\/counties\/([a-z-]+)\/([a-z-]+)\/cities$/, function(req, res) {
+		console.log('get county cities', req.params);
+
+		const stateSlug = req.params[0];
+		const countySlug = req.params[1];
+
 		jsonData(
-			cities.getCities.bind(null, req.params.stateSlug),
+			counties.getCities.bind(null, stateSlug, countySlug),
 			false, req, res
 		);
 	});
-	app.get('/cities/:stateSlug([a-z-]+?)/:citySlug([a-z-,]+?)', function(req, res) {
+
+
+
+
+
+	/*
+	*	cities
+	*/
+
+	server.get(/^\/cities\/([a-z-]+)$/, function(req, res) {
+		console.log('get cities', req.params);
+
+		const stateSlug = req.params[0];
+
 		jsonData(
-			cities.getCity.bind(null, req.params.stateSlug, req.params.citySlug),
+			cities.getCities.bind(null, stateSlug),
+			false, req, res
+		);
+	});
+
+
+
+	server.get(/^\/cities\/([a-z-]+)\/([a-z-]+)$/, function(req, res) {
+		console.log('get city', req.params);
+
+		const stateSlug = req.params[0];
+		const citySlug = req.params[1];
+
+		jsonData(
+			cities.getCity.bind(null, stateSlug, citySlug),
 			true, req, res
 		);
 	});
 
 
-	app.get('/zips/:stateSlug([a-z-]+?)', function(req, res) {
+
+
+
+	/*
+	*	zip codes
+	*/
+
+	server.get(/^\/zips\/([a-z-]+)$/, function(req, res) {
+		console.log('get zips', req.params);
+
+		const stateSlug = req.params[0];
+
 		jsonData(
-			zips.getZips.bind(null, req.params.stateSlug),
+			zips.getZips.bind(null, stateSlug),
 			false, req, res
 		);
 	});
-	app.get('/zips/:zip([0-9,]{5,})', function(req, res) {
+
+
+
+	server.get(/^\/zips\/([0-9,]{5,})$/, function(req, res) {
+		console.log('get zip', req.params);
+
+		const zip = req.params[0];
+
 		jsonData(
-			zips.getZip.bind(null, req.params.zip),
+			zips.getZip.bind(null, zip),
 			true, req, res
 		);
 	});
 
 
-	
+
 
 	function dumpRoute(req, res) {
 		res.send(req.params);
@@ -84,8 +159,8 @@ module.exports = function(app, express) {
 				'Cache-Control': 'public, max-age=' + (cacheTime),
 				'Expires': new Date(Date.now() + (cacheTime * 1000)).toUTCString(),
 			});
-			
-			res.jsonp(data);
+
+			res.send(data);
 		});
 	}
 
